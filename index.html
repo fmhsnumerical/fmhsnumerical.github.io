@@ -121,6 +121,7 @@
                             <option value="1.2">AP (1.2)</option>
                         </select>
                     </td>
+                    <td><button type="button" onclick="removeCourse(this)">Remove</button></td>
                 </tr>
             </table>
 
@@ -157,15 +158,20 @@
                         <option value="1.2">AP (1.2)</option>
                     </select>
                 </td>
+                <td><button type="button" onclick="removeCourse(this)">Remove</button></td>
             `;
             courseTable.appendChild(newRow);
+        }
+
+        function removeCourse(button) {
+            const row = button.closest("tr");
+            row.remove();
         }
 
         function calculateGPA() {
             const form = document.getElementById("gpaform");
             const userName = document.getElementById("userName").value;
 
-            // Check if the user's name is provided
             if (!userName) {
                 alert("Please enter your name.");
                 return;
@@ -175,16 +181,15 @@
             let totalWeightedPoints = 0;
 
             for (let i = 1; i <= courseCount; i++) {
-                const grade = parseFloat(form[`grade${i}`]?.value) || 0;
+                const gradeInput = form.querySelector(`[name="grade${i}"]`);
+                const creditInput = form.querySelector(`[name="credit${i}"]`);
+                const weightInput = form.querySelector(`[name="weight${i}"]`);
 
-                // Validate the grade range
-                if (grade < 0 || grade > 100) {
-                    alert(`Grade for course ${i} must be between 0 and 100.`);
-                    return;
-                }
+                if (!gradeInput || !creditInput || !weightInput) continue;
 
-                const credit = parseFloat(form[`credit${i}`]?.value) || 0;
-                const weight = parseFloat(form[`weight${i}`]?.value) || 0;
+                const grade = parseFloat(gradeInput.value) || 0;
+                const credit = parseFloat(creditInput.value) || 0;
+                const weight = parseFloat(weightInput.value) || 0;
 
                 if (credit > 0 && grade > 0 && weight > 0) {
                     totalCredits += credit;
